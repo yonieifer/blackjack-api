@@ -1,8 +1,8 @@
 import playerRepo from "../repositories/playerRepo.js";
-import {createNewPlayer} from "../services/service.js"
+import service from "../services/service.js"
 
 const createNewPlayer = async () => {
-    const player = createNewPlayer()
+    const player = service.createNewPlayer()
     const playerId = await playerRepo.create(player)
     return {playerId, chips: player.chips}
 }
