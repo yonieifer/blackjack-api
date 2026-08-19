@@ -61,17 +61,17 @@ const validateBetForPlayer = (bet, player) => {
     return bet > 0 && bet <= player.chips;
 };
 
-const validateStatus = (status) => {
-    const validStatus = [
-        "in_progress",
-        "player_bust",
-        "dealer_bust",
-        "player_win",
-        "dealer_win",
-        "push",
-    ];
-    return validStatus.includes(status);
-};
+// const validateStatus = (status) => {
+//     const validStatus = [
+//         "in_progress",
+//         "player_bust",
+//         "dealer_bust",
+//         "player_win",
+//         "dealer_win",
+//         "push",
+//     ];
+//     return validStatus.includes(status);
+// };
 
 const playDealerTurn = (dealerCards) => {
     let dealerTotal = calculateHand(dealerCards);
