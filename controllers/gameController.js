@@ -19,7 +19,7 @@ export const hit = async (req, res) => {
 };
 
 export const stand = async (req, res) => {
-    const player = req.player
-    const roundResults = await usecase.stand(player)
-    res.status(200).json(roundResults)
-}
+    const player = req.player;
+    const roundResults = await usecase.stand(player);
+    res.status(200).json(roundResults);
+};

@@ -19,11 +19,11 @@ const calculateHand = (cards) => {
     let aces = 0;
     cards.forEach((c) => {
         sum += RANKS[c.rank];
-        if (c.rank === "A") aces++
+        if (c.rank === "A") aces++;
     });
     while (sum > 21 && aces > 0) {
         sum -= 10;
-        aces -= 1;
+        aces--;
     }
     return sum;
 };

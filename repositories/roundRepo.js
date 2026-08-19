@@ -13,9 +13,9 @@ const getOpenRoundByPlayerId = async (playerId) => {
         playerId: playerId,
         status: "in_progress",
     });
-    if (!round) return
-    const {_id, ...rest} = round
-    return {id: _id.toString(), ...rest};
+    if (!round) return;
+    const { _id, ...rest } = round;
+    return { id: _id.toString(), ...rest };
 };
 
 const addCardToPlayer = async (roundId, card) => {
