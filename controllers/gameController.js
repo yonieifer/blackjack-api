@@ -1,13 +1,19 @@
-import usecase from "../usecases/usecase.js"
+import usecase from "../usecases/usecase.js";
 
 export const startGame = async (req, res) => {
-    const player = await usecase.createNewPlayer()
-    res.status(201).json(player)
-}
+    const player = await usecase.createNewPlayer();
+    res.status(201).json(player);
+};
 
 export const startRound = async (req, res) => {
-    const {bet} = req.body
-    const player = req.player
-    const roundDetails = await usecase.startRound(player, bet)
-    res.status(201).json(roundDetails)
-}
+    const { bet } = req.body;
+    const player = req.player;
+    const roundDetails = await usecase.startRound(player, bet);
+    res.status(201).json(roundDetails);
+};
+
+export const hit = async (req, res) => {
+    const player = req.player;
+    const roundDetails = await usecase.hit(player);
+    res.status(200).json(roundDetails);
+};

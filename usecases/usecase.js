@@ -13,10 +13,12 @@ const startRound = async (player, bet) => {
     const openRound = await roundRepo.getOpenRoundByPlayerId(player.id);
     if (openRound) {
         const error = createError(409, "you have open round already");
+        throw error;
     }
     const isValidBet = service.validateBetForPlayer(bet, player);
     if (!isValidBet) {
         const error = createError(400, "invalid bet");
+        throw error;
     }
     await playerRepo.updateChips(player.id, -bet);
     const playerCards = [service.getCard(), service.getCard()];
@@ -32,8 +34,31 @@ const startRound = async (player, bet) => {
         roundId,
         playerCards,
         dealerUpCard: round.dealerCards[0],
+        chips: player.chips - bet,
+    };
+};
+
+const hit = async (player) => {
+    const openRound = await roundRepo.getOpenRoundByPlayerId(player.id);
+    if (!openRound) {
+        const error = createError(409, "you dont have open round please press start round");
+        throw error;
+    }
+    const newCard = service.getCard();
+    await roundRepo.addCardToPlayer(openRound.id, newCard);
+    const playerCards = [...openRound.playerCards, newCard];
+    const playerTotal = service.calculateHand(playerCards);
+    let status = openRound.status
+    if (playerTotal > 21) {
+        status = "player_bust";
+        await roundRepo.updateStatus(openRound.id, status);
+    }
+    return {
+        playerCards,
+        playerTotal,
+        status: status,
         chips: player.chips,
     };
 };
 
-export default { createNewPlayer, startRound };
+export default { createNewPlayer, startRound, hit };
