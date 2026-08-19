@@ -91,4 +91,10 @@ const stand = async (player) => {
     };
 };
 
-export default { createNewPlayer, startRound, hit, stand };
+const getRoundDetails = async (player) => {
+    const round = await roundRepo.getOpenRoundByPlayerId(player.id);
+    const { _id, dealerCards, ...rest } = round;
+    return { dealerUpCards: dealerCards[0], ...rest };
+};
+
+export default { createNewPlayer, startRound, hit, stand, getRoundDetails };

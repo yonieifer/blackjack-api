@@ -5,6 +5,7 @@ import {
     startRound,
     hit,
     stand,
+    getMyRound,
 } from "../controllers/gameController.js";
 import { identifyPlayer } from "../middlewares/middlewares.js";
 
@@ -17,5 +18,7 @@ router.post("/start-round", identifyPlayer, startRound);
 router.post("/hit", identifyPlayer, hit);
 
 router.post("/stand", identifyPlayer, stand);
+
+router.get("/my-round", identifyPlayer, getMyRound);
 
 export default router;

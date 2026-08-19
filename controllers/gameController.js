@@ -23,3 +23,9 @@ export const stand = async (req, res) => {
     const roundResults = await usecase.stand(player);
     res.status(200).json(roundResults);
 };
+
+export const getMyRound = async (req, res) => {
+    const player = req.player;
+    const myRound = await usecase.getRoundDetails(player);
+    res.status(200).json(myRound);
+};
