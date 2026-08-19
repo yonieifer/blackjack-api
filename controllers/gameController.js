@@ -17,3 +17,9 @@ export const hit = async (req, res) => {
     const roundDetails = await usecase.hit(player);
     res.status(200).json(roundDetails);
 };
+
+export const stand = async (req, res) => {
+    const player = req.player
+    const roundResults = await usecase.stand(player)
+    res.status(200).json(roundResults)
+}
