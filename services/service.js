@@ -26,9 +26,10 @@ const calculateHand = (cards) => {
 };
 
 const getCard = () => {
+    const rankList = Object.keys(RANKS)
     const card = {
-        rank: ranks[Math.floor(Math.random() * ranks.length)],
-        suit: suits[Math.floor(Math.random() * suits.length)],
+        rank: rankList[Math.floor(Math.random() * rankList.length)],
+        suit: SUITS[Math.floor(Math.random() * SUITS.length)],
     };
     return card;
 };
@@ -41,7 +42,23 @@ const createNewPlayer = () => {
     return player
 }
 
-export default {calculateHand, getCard, createNewPlayer}
+const createNewRound = (playerId, bet, playerCards, dealerCards) => {
+    const round = {
+        playerId: playerId,
+        bet: bet,
+        playerCards: playerCards,
+        dealerCards: dealerCards,
+        status: "in_progress",
+        createdAt: new Date().toLocaleString()
+    }
+    return round
+}
+
+const validateBetForPlayer = (bet, player) => {
+    return bet > 0 && bet <= player.chips
+}
+
+export default {calculateHand, getCard, createNewPlayer, createNewRound, validateBetForPlayer}
 
 
 
