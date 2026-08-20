@@ -80,7 +80,10 @@ const stand = async (player) => {
     const playerTotal = service.calculateHand(playerCards);
     const status = service.statusDecision(dealerTotal, playerTotal);
     await roundRepo.updateStatus(openRound.id, status);
-    await playerRepo.updateChips(player.id, openRound.bet * 2);
+    if (status === "dealer_bust" || status === "player_win")
+        await playerRepo.updateChips(player.id, openRound.bet * 2);
+    else if (status === "push")
+        await playerRepo.updateChips(player.id, openRound.bet);
     return {
         playerCards,
         dealerCards,
