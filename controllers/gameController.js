@@ -1,9 +1,15 @@
 import usecase from "../usecases/usecase.js";
+import path from "path"
+
 
 export const startGame = async (req, res) => {
     const player = await usecase.createNewPlayer();
     res.status(201).json(player);
 };
+
+export const getGame = (req, res) => {
+    res.sendFile(path.join(import.meta.dirname, "..", 'public', 'game.html'))
+}
 
 export const startRound = async (req, res) => {
     const { bet } = req.body;

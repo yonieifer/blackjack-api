@@ -1,12 +1,17 @@
-import express from "express";
+import express, { application } from "express";
 import router from "./routes/gameRouter.js";
 import { errorHandler, logger } from "./middlewares/middlewares.js";
+
 
 const server = express();
 
 server.use(logger);
 
 server.use(express.json());
+
+server.use(express.static("public"))
+
+server.use(express.urlencoded({extended: true}))
 
 server.use("/", router);
 

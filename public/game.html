@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lackjack</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+<body>
+    <header>
+        <h1 class="title">BLACKJACK</h1>
+    </header>
+    <main>
+        <h2 class="status"></h2>
+        <p class="message"></p>
+        <div class="welcome">
+            <h2 class="welcome-title">WELCOME TO BLACKJACK</h2>
+            <p class="welcome-inst">To enter the game please select START GAME</p>
+            <button class="btn start-game">START GAME</button>
+        </div>
+        <div class="round-details hide">
+            <h2 class="round-title">Enter your bet and press START ROUND</h2>
+            <label for="bet-amount">please enter your bet</label>
+            <input type="number" id="bet-amount" placeholder="0">
+            <button class="btn start-round">START ROUND</button>
+        </div>
+        <div class="game-table hide">
+            <section class="player-section dealer">
+                <h2 class="player-title dealer">DEALER</h2>
+                <div class="player-cards dealer">
+                    <ul class="cards-list dealer">
+                    </ul>
+                    <p class="dealer-total"></p>
+                </div>
+            </section>
+            <section class="buttons-section">
+                <button class="btn hit">HIT</button>
+                <button class="btn stand">STAND</button>
+            </section>
+            <section class="player-section player">
+                <h2 class="player-title player">PLAYER</h2>
+                <div class="player-cards player">
+                    <ul class="cards-list player">
+                    </ul>
+                    <p class="player-total"></p>
+                </div>
+            </section>
+            <section class="chips-section">
+                <div class="bet-div">
+                    <h2 class="bet-title">BET:</h2>
+                    <h3 class="bet-value"></h3>
+                </div>
+                <div class="chips-div">
+                    <h2 class="chips-title">CHIPS:</h2>
+                    <h3 class="chips-value"></h3>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

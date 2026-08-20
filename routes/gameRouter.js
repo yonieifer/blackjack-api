@@ -1,6 +1,6 @@
 import express from "express";
-import usecase from "../usecases/usecase.js";
 import {
+    getGame,
     startGame,
     startRound,
     hit,
@@ -10,6 +10,8 @@ import {
 import { identifyPlayer } from "../middlewares/middlewares.js";
 
 const router = express.Router();
+
+router.get("/", getGame)
 
 router.post("/start-game", startGame);
 
