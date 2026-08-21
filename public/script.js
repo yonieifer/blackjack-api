@@ -1,19 +1,75 @@
-const welcomeDiv = document.querySelector(".welcome");
+const message = document.querySelector(".message");
+const welcomeView = document.querySelector(".welcome");
 const welcomeBtn = document.querySelector(".start-game");
-const roundDiv = document.querySelector(".round-details");
+
+const bettingView = document.querySelector(".betting");
 const betInput = document.querySelector("#bet-amount");
-const roundBtn = document.querySelector(".start-round");
-const gameTable = document.querySelector(".game-table");
+const playBtn = document.querySelector(".start-round");
+
+const playingView = document.querySelector(".playing");
+
+const table = document.querySelector(".table")
 const dealerCardsList = document.querySelector(".cards-list.dealer");
 const playerCardsList = document.querySelector(".cards-list.player");
+const playerTotal = document.querySelector(".player.total");
+const dealerTotal = document.querySelector(".dealer.total");
+
 const hitBtn = document.querySelector(".hit");
 const standBtn = document.querySelector(".stand");
-const betValue = document.querySelector(".bet-value");
-const chipsValue = document.querySelector(".chips-value");
-const statusTitle = document.querySelector(".status");
-const playerTotalP = document.querySelector(".player-total");
-const dealerTotalP = document.querySelector(".dealer-total");
-const message = document.querySelector(".message");
+const newRoundBtn = document.querySelector(".new-round")
+
+const betV = document.querySelector(".bet-value");
+const chipsV = document.querySelector(".chips-value");
+
+const state = {
+    playerId: localStorage.getItem("x-player-id") || null,
+    view: "welcome",
+    roundOver: false,
+    msg: "",
+    playerCards: [],
+    dealerCards: [],
+    dealerTotal: 0,
+    playerTotal: 0,
+    chips: 0,
+    bet: 0,
+};
+
+const symbols = {
+    "hearts": "♥️", "diamonds": "♦️", "clubs": "♣️", "spades": "♠️"
+}
+
+const showView = () => {
+    welcomeView.classList.add("hide")
+    bettingView.classList.add("hide")
+    playingView.classList.add("hide")
+
+    if (state.view === "welcome") welcomeView.classList.remove("hide")
+    else if (state.view === "betting") bettingView.classList.remove("hide")
+    else if (state.view === "playing") playingView.classList.remove("hide")
+}
+
+const showCards = (cards, container) => {
+    container.innerHTML = "";
+    cards.forEach((card) => {
+        const listCard = document.createElement("li");
+        listCard.classList.add("card");
+        listCard.textContent = card.rank + symbols[card.suit];
+        container.appendChild(listCard);
+    });
+};
+
+const renderDom = () => {
+    message.textContent = state.msg
+    showCards(state.playerCards, playerCardsList)
+    showCards(state.dealerCards, dealerCardsList)
+    playerTotal.textContent = state.playerTotal
+    dealerTotal.textContent = state.dealerTotal
+    chipsV.textContent = state.chips
+    betV.textContent = state.bet
+
+    newRoundBtn.classList.toggle("hide", !state.roundOver)
+    showView()
+}
 
 const startGame = async () => {
     const res = await fetch("/start-game", {
@@ -21,36 +77,20 @@ const startGame = async () => {
     });
     if (!res.ok) {
         const errData = await res.json();
-        message.textContent = errData.message;
+        state.msg = errData.message;
+        renderDom()
         return;
     }
     const { playerId } = await res.json();
     localStorage.setItem("x-player-id", playerId);
-    welcomeDiv.classList.add("hide");
-    roundDiv.classList.remove("hide");
-};
-
-const showPlayerCards = (playerCards) => {
-    playerCardsList.innerHTML = "";
-    playerCards.forEach((card) => {
-        const listCard = document.createElement("li");
-        listCard.textContent = card.rank;
-        playerCardsList.appendChild(listCard);
-    });
-};
-
-const showDealerCards = (dealerCards) => {
-    dealerCardsList.innerHTML = "";
-    dealerCards.forEach((card) => {
-        const listCard = document.createElement("li");
-        listCard.textContent = card.rank;
-        dealerCardsList.appendChild(listCard);
-    });
+    state.view = "betting"
+    renderDom()
 };
 
 const startRound = async () => {
     const betAmount = betInput.value;
-    message.textContent = "";
+    state.msg = "";
+    state.roundOver = false
     const res = await fetch("/start-round", {
         method: "post",
         headers: {
@@ -61,21 +101,21 @@ const startRound = async () => {
     });
     if (!res.ok) {
         const errData = await res.json();
-        message.textContent = errData.message;
+        state.msg = errData.message;
+        renderDom()
         return;
     }
     const { roundId, playerCards, dealerUpCard, chips } = await res.json();
-    showPlayerCards(playerCards);
-    showDealerCards([dealerUpCard]);
-    chipsValue.textContent = chips;
-    betValue.textContent = betAmount;
-    statusTitle.textContent = "";
-    roundDiv.classList.add("hide");
-    gameTable.classList.remove("hide");
+    state.playerCards = playerCards
+    state.dealerCards = [dealerUpCard]
+    state.chips = chips;
+    state.bet = betAmount;
+    state.view = "playing"
+    renderDom()
 };
 
 const hit = async () => {
-    message.textContent = "";
+    state.msg = "";
     const res = await fetch("/hit", {
         method: "post",
         headers: {
@@ -85,21 +125,23 @@ const hit = async () => {
     });
     if (!res.ok) {
         const errData = await res.json();
-        message.textContent = errData.message;
+        state.msg = errData.message;
+        renderDom()
         return;
     }
     const { playerCards, playerTotal, status, chips } = await res.json();
-    showPlayerCards(playerCards);
-    playerTotalP.textContent = playerTotal;
-    chipsValue.textContent = chips;
+    state.playerCards = playerCards
+    state.playerTotal = playerTotal;
+    state.chips = chips;
     if (status != "in_progress") {
-        statusTitle.textContent = status;
-        roundDiv.classList.remove("hide");
+        state.msg = status
+        state.roundOver = true
     }
+    renderDom()
 };
 
 const stand = async () => {
-    message.textContent = "";
+    state.msg = "";
     const res = await fetch("/stand", {
         method: "post",
         headers: {
@@ -109,7 +151,8 @@ const stand = async () => {
     });
     if (!res.ok) {
         const errData = await res.json();
-        message.textContent = errData.message;
+        state.msg = errData.message;
+        renderDom()
         return;
     }
     const {
@@ -120,30 +163,55 @@ const stand = async () => {
         status,
         chips,
     } = await res.json();
-    showPlayerCards(playerCards);
-    showDealerCards(dealerCards);
-    playerTotalP.textContent = playerTotal;
-    dealerTotalP.textContent = dealerTotal;
-    statusTitle.textContent = status;
-    chipsValue.textContent = chips;
-    roundDiv.classList.remove("hide");
+
+    state.playerCards = playerCards
+    state.dealerCards = dealerCards
+    state.playerTotal = playerTotal;
+    state.dealerTotal = dealerTotal;
+    state.msg = status;
+    state.chips = chips;
+    state.roundOver = true
+    renderDom()
 };
 
 const relaod = async () => {
-    const res = fetch("/my-round");
+    const res = await fetch("/my-round", {
+        method: "get",
+        headers: {
+            "Content-Type": "application/json",
+            "x-player-id": localStorage.getItem("x-player-id"),
+        },
+    });
     if (!res.ok) {
         const errData = await res.json();
-        message.textContent = errData.message;
+        state.msg = errData.message;
+        renderDom()
         return;
     }
-    const { playerId, bet, playerUpCards, dealerCards, status } = res.json()
-    
+    const { playerId, bet, playerCards, dealerUpCards, status, chips, round } = await res.json();
+    if (round === null) return;
+    state.playerCards = playerCards
+    state.dealerCards = [dealerUpCards]
+    state.chips = chips;
+    state.bet = bet;
+    state.view = "playing"
+    renderDom()
 };
+
+const newRound = () => {
+    state.msg = "";
+    state.view = "betting"
+    renderDom()
+}
 
 welcomeBtn.addEventListener("click", startGame);
 
-roundBtn.addEventListener("click", startRound);
+playBtn.addEventListener("click", startRound);
 
 hitBtn.addEventListener("click", hit);
 
 standBtn.addEventListener("click", stand);
+
+document.addEventListener("DOMContentLoaded", relaod);
+
+newRoundBtn.addEventListener("click", newRound)

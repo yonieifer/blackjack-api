@@ -5,57 +5,114 @@
     text-align: center;
 }
 
+:root {
+    --red-color: rgb(170, 0, 0);
+    --pink-color: rgb(252, 192, 192)
+}
+
 .hide {
     display: none !important;
 }
 
 body {
+    min-height: 100vh;
+}
+
+header {
+    background-color: var(--red-color);
+    color: white;
+    position: sticky;
+    top: 0;
+    padding: 1rem;
+}
+    
+main {
+    background-color:var(--pink-color);
+}
+
+.message {
+    color: var(--red-color);
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.view {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 2rem;
+    gap: 2rem;
 }
-
-main {
-    background-color:rgb(219, 140, 140);
-}
-
+    
 .welcome {
+    
+}
+
+.btn {
+    color: white;
+    background-color: var(--red-color);
+    padding: 1rem;
+    border-radius: 5px;
+    border: none;
+    width: 5vw;
+}
+
+.btn:hover {
+    background-color: rgb(136, 0, 0);
+    scale: 1.05;
+}
+
+.betting {
+}
+
+#bet-amount {
+    padding: 1rem;
+    border-radius: 5px;
+    border: solid 2px var(--red-color);
+}
+
+.state.playing {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.table {
     display: flex;
     flex-direction: column;
-    padding: 5rem;
-    gap: 3rem;
+    padding: 2rem;
+    gap: 2rem;
+    color: var(--red-color);
 }
 
-.round-details {
-    display: flex;
-    flex-direction: column;
-    padding: 5rem;
-}
-
-section {
-}
-
-ul {
+.cards-list {
+    margin: 1rem ;
     list-style: none;
     display: flex;
     justify-content: center;
     gap: 1rem;
 }
 
-.btn {
-    color: white;
-    background-color: brown;
-    padding: 1rem;
-    border-radius: 5px;
-    border: none;
-}
-
 .card {
     background-color: white;
-    padding: 2rem 1.5rem;
+    padding: 4rem 3rem;
     border-radius: 5px;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
+.buttons-section {
+    display: flex;
+    justify-content:center;
+    gap: 1rem;
+}
+
+.chips-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    color: var(--red-color);
+}
 
 
 

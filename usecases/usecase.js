@@ -20,7 +20,7 @@ const startRound = async (player, bet) => {
         const error = createError(400, "invalid bet");
         throw error;
     }
-    await playerRepo.updateChips(player.id, -bet);
+    await playerRepo.updateChips(player.id, Number(-bet));
     const playerCards = [service.getCard(), service.getCard()];
     const dealerCards = [service.getCard(), service.getCard()];
     const round = service.createNewRound(
@@ -80,24 +80,31 @@ const stand = async (player) => {
     const playerTotal = service.calculateHand(playerCards);
     const status = service.statusDecision(dealerTotal, playerTotal);
     await roundRepo.updateStatus(openRound.id, status);
-    if (status === "dealer_bust" || status === "player_win")
-        await playerRepo.updateChips(player.id, openRound.bet * 2);
-    else if (status === "push")
-        await playerRepo.updateChips(player.id, openRound.bet);
+    let amount = 0;
+    if (status === "dealer_bust" || status === "player_win") {
+        amount = openRound.bet * 2;
+        await playerRepo.updateChips(player.id, Number(amount));
+    } else if (status === "push") {
+        amount = openRound.bet;
+        await playerRepo.updateChips(player.id, Number(amount));
+    }
     return {
         playerCards,
         dealerCards,
         playerTotal,
         dealerTotal,
         status,
-        chips: player.chips + openRound.bet * 2,
+        chips: player.chips + amount,
     };
 };
 
 const getRoundDetails = async (player) => {
     const round = await roundRepo.getOpenRoundByPlayerId(player.id);
+    if (!round) {
+        return { round: null };
+    }
     const { _id, dealerCards, ...rest } = round;
-    return { dealerUpCards: dealerCards[0], ...rest };
+    return { dealerUpCards: dealerCards[0], ...rest, chips: player.chips };
 };
 
 export default { createNewPlayer, startRound, hit, stand, getRoundDetails };
